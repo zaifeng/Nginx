@@ -10,14 +10,15 @@
 
 >listen = /var/run/phpfpm.sock
 
+找到
 >;listen.owner = nobody
 
 >;listen.group = nobody
 
 >;listen.mode = 0660
 
-将上面3行注释（;）去掉，修改成 和nginx一样的用户和组，
-否则会报“nginx error connect to phpfpm.sock failed (13: Permission denied)”错误
+去掉注释（;），修改成和nginx一样的用户和组，
+否则会报错“nginx error connect to phpfpm.sock failed (13: Permission denied)”
 即，无法访问phpfpm.sock，如果想所有用户都能用修改下listen.mode
 修改后为：
 
@@ -29,6 +30,7 @@
 
 
 重启php-fpm 
+
 >/usr/local/php/sbin/php-fpm restart
 
 ###2、配置nginx
