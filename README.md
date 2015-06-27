@@ -45,3 +45,10 @@
 重启nginx
 
 >/usr/local/nginx/sbin/nginx -s reload
+
+
+# 获取Nginx编译阶段参数
+
+> /usr/local/nginx/sbin/nginx -V 
+
+> 注意V大写 小写v 是查看nginx版本
