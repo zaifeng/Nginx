@@ -52,3 +52,8 @@
 > /usr/local/nginx/sbin/nginx -V 
 
 > 注意V大写 小写v 是查看nginx版本
+
+
+# 备忘
+
+> Nginx配置文件分为好多块，常见的从外到内依次是「http」、「server」、「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值
