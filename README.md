@@ -57,3 +57,16 @@
 # 备忘
 
 > Nginx配置文件分为好多块，常见的从外到内依次是「http」、「server」、「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值
+
+
+##upstream 设置
+//outside server block
+upstream hellostream 
+{
+    server 127.0.0.1:8080;
+    server 127.0.0.1:9000;    
+}
+
+// in server -> location block
+proxy_pass http://hellowstream
+
