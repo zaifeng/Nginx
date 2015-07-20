@@ -65,7 +65,10 @@ upstream hellostream
 {
     server 127.0.0.1:8080;
     server 127.0.0.1:9000;    
+    ip_hash;
 }
+
+// ip_hash 作用是对ip进行hash，使每次都分配到同一台服务器上
 
 // in server -> location block
 proxy_pass http://hellowstream
