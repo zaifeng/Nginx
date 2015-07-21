@@ -73,3 +73,18 @@ upstream hellostream
 // in server -> location block
 proxy_pass http://hellowstream
 
+
+##负载均衡 中一台服务器宕机 处理情况
+
+设置 timeout
+
+    proxy_connect_timeout       1;
+    proxy_read_timeout          1;
+    proxy_send_timeout          1; 
+
+借用网上一位哥们的话：
+
+楼上说的不够准确，nginx的健康检查机制确实存在缺陷。
+2个节点，其中一个宕机了，nginx还是会分发请求给它，但是发出后觉得不对劲，没有响应，顿了一下，然后发给另一个节点。默认1分钟内不会再发请求，一分钟后重复上述动作。这样的结果是网站时快时慢，间歇性抽风。
+
+有时间还是要看下nginx源码
