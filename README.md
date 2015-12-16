@@ -286,4 +286,5 @@ proxy_pass http://hellowstream
 </tbody>
 </table>
 
+
 /usr/local/nginx/sbin/nginx -V 可以查看nginx编译参数设定 
