@@ -288,3 +288,6 @@ proxy_pass http://hellowstream
 
 
 /usr/local/nginx/sbin/nginx -V 可以查看nginx编译参数设定 
+
+
+error_log log/error.log debug;  #制定日志路径，级别。这个设置可以放入全局块，http块，server块，级别以此为：debug|info|notice|warn|error|crit|alert|emerg
