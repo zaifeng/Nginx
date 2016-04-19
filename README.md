@@ -52,11 +52,19 @@
 > /usr/local/nginx/sbin/nginx -V 
 
 > 注意V大写 小写v 是查看nginx版本
+> 大写V不仅可以显示nginx版本，而且可以查看nginx编译参数
 
 
 # 备忘
 
-> Nginx配置文件分为好多块，常见的从外到内依次是「http」、「server」、「location」等等，缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值
+> Nginx配置文件主要有
+>>全局
+>>events
+>>http
+    http模块下又包含
+    >server
+    >location
+缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值
 
 
 ##upstream 设置
@@ -84,10 +92,8 @@ proxy_pass http://hellowstream
 
 借用网上一位哥们的话：
 
-楼上说的不够准确，nginx的健康检查机制确实存在缺陷。
+nginx的健康检查机制确实存在缺陷。
 2个节点，其中一个宕机了，nginx还是会分发请求给它，但是发出后觉得不对劲，没有响应，顿了一下，然后发给另一个节点。默认1分钟内不会再发请求，一分钟后重复上述动作。这样的结果是网站时快时慢，间歇性抽风。
-
-有时间还是要看下nginx源码
 
 
 
@@ -285,9 +291,6 @@ proxy_pass http://hellowstream
 </tr>
 </tbody>
 </table>
-
-
-/usr/local/nginx/sbin/nginx -V 可以查看nginx编译参数设定 
 
 
 error_log log/error.log debug;  #制定日志路径，级别。这个设置可以放入全局块，http块，server块，级别以此为：debug|info|notice|warn|error|crit|alert|emerg
