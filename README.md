@@ -1,73 +1,75 @@
-#Nginx Study 
+# Nginx Study 
 
-# 设置php-fpm使用socket文件
+#### 设置php-fpm使用socket文件
 
-###1、修改php文件php-fpm.conf
-
->listen = 127.0.0.1:9000
-
+fpm配置文件php-fpm.conf
+```
+listen = 127.0.0.1:9000
+```
 修改为
-
->listen = /var/run/phpfpm.sock
-
+```
+listen = /var/run/phpfpm.sock
+```
 找到
->;listen.owner = nobody
-
->;listen.group = nobody
-
->;listen.mode = 0660
+```
+;listen.owner = nobody
+;listen.group = nobody
+;listen.mode = 0660
+```
 
 去掉注释（;），修改成和nginx一样的用户和组，
 否则会报错“nginx error connect to phpfpm.sock failed (13: Permission denied)”
 即，无法访问phpfpm.sock，如果想所有用户都能用修改下listen.mode
 修改后为：
-
->listen.owner = www
-
->listen.group = www
-
->listen.mode = 0666
-
+```
+listen.owner = www
+listen.group = www
+listen.mode = 0666
+```
 
 重启php-fpm 
-
->/usr/local/php/sbin/php-fpm restart
-
-###2、配置nginx
-在/usr/local/nginx/conf/nginx.conf中找到
-
->fastcgi_pass 127.0.0.1:9000;
-
+```
+/usr/local/php/sbin/php-fpm restart
+```
+#### 配置nginx
+在``/usr/local/nginx/conf/nginx.conf``中找到
+```
+fastcgi_pass 127.0.0.1:9000;
+```
 改为
-
->fastcgi_pass unix:/var/run/phpfpm.sock;
+```
+fastcgi_pass unix:/var/run/phpfpm.sock;
+```
 
 重启nginx
+```
+/usr/local/nginx/sbin/nginx -s reload
+```
 
->/usr/local/nginx/sbin/nginx -s reload
+#### 获取Nginx编译阶段参数
+```
+/usr/local/nginx/sbin/nginx -V 
 
+注意V大写 小写v 是查看nginx版本
+大写V不仅可以显示nginx版本，而且可以查看nginx编译参数
+```
 
-# 获取Nginx编译阶段参数
+#### 备忘
 
-> /usr/local/nginx/sbin/nginx -V 
+Nginx配置文件主要有
 
-> 注意V大写 小写v 是查看nginx版本
-> 大写V不仅可以显示nginx版本，而且可以查看nginx编译参数
+全局
+- events
+- http
 
-
-# 备忘
-
-> Nginx配置文件主要有
->>全局
->>events
->>http
-    http模块下又包含
-    >server
-    >location
+http模块下又包含
+- server
+- location
 缺省的继承关系是从外到内，也就是说内层块会自动获取外层块的值作为缺省值
 
 
-##upstream 设置
+#### upstream 设置
+```
 //outside server block
 upstream hellostream 
 {
@@ -75,26 +77,26 @@ upstream hellostream
     server 127.0.0.1:9000;    
     ip_hash;
 }
+```
+- ip_hash 作用是对ip进行hash，使每次都分配到同一台服务器上
 
-// ip_hash 作用是对ip进行hash，使每次都分配到同一台服务器上
-
-// in server -> location block
+- in server -> location block
 proxy_pass http://hellowstream
 
 
 ##负载均衡 中一台服务器宕机 处理情况
 
 设置 timeout
-
-    proxy_connect_timeout       1;
-    proxy_read_timeout          1;
-    proxy_send_timeout          1; 
+```
+proxy_connect_timeout       1;
+proxy_read_timeout          1;
+proxy_send_timeout          1; 
+```
 
 借用网上一位哥们的话：
 
 nginx的健康检查机制确实存在缺陷。
 2个节点，其中一个宕机了，nginx还是会分发请求给它，但是发出后觉得不对劲，没有响应，顿了一下，然后发给另一个节点。默认1分钟内不会再发请求，一分钟后重复上述动作。这样的结果是网站时快时慢，间歇性抽风。
-
 
 
 <table cellspacing="0" cellpadding="5">
@@ -293,4 +295,15 @@ nginx的健康检查机制确实存在缺陷。
 </table>
 
 
-error_log log/error.log debug;  #制定日志路径，级别。这个设置可以放入全局块，http块，server块，级别以此为：debug|info|notice|warn|error|crit|alert|emerg
+``error_log log/error.log debug``;
+>指定日志路径，级别。
+
+这个设置可以放入全局块，`http`块，`server`块，级别以此为：
+- debug
+- info
+- notice
+- warn
+- error
+- crit
+- alert
+- emerg
